@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"
+    />
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.css" rel="stylesheet"/>
+</head>
+<body>
+
+
+    <div class="p-4">
+
+        <h1 class="text-center text-muted mb-4">Todo List</h1>
+
+        <div class="row">
+            <div class="col-12 col-md-4 col-lg-4 border p-4">
+                <form action="/add" method="post">
+                    <div>
+                        <input name="title" placeholder="Enter Todo" class="form-control" required><br>
+                        <input name="date" type="date" class="form-control"><br>
+                        <input name="time" type="time" class="form-control" format="%d/%m/%Y"><br>
+                        <div class="text-center">
+                            <button class="mx-auto btn btn-primary text-nowrap">Add Todo</button>
+                        </div>
+                        
+                    </div>
+                </form>
+            </div>
+            
+            <div class="col-12 col-md-8 col-lg-8 border rounded p-4">
+                {% if todo_list|length == 0 %}
+                    <h4 class="text-center text-muted mb-4">No hay tareas agregadas</h4>
+                {% endif %}
+                {% for todo in todo_list %}
+                    <div class="p-4 todo-item bg-light border-light card ">
+                    
+                        <div style="display: flex;">
+                            <div class="mb-3 col-10" style="display: flex; align-items: center;">
+                                {% if todo.modify == False %}
+                                    {% if todo.complete == False %}
+                                        <input style="border: none; outline: none; font-size: 25px;" size="10"; class="bg-light col-8" type="text" name="title2" value="{{todo.title}}" readonly="readonly">
+                                    {% else %}
+                                    <input style="border: none; outline: none; font-size: 25px; text-decoration: line-through;" size="10"; class="bg-light col-8" type="text" name="title2" value="{{todo.title}}" readonly="readonly">
+                                    {% endif %}
+                                {% else %}
+                                <form action="/acept-modify/{{todo.id}}" method="post" class="col-12">
+                                    <input style="border: none; border-bottom:2px solid #0275d8; outline: none; font-size: 25px;" size="10"; class="bg-light col-10" type="text" name="title2" value="{{todo.title}}">
+                                    <button class="bg-light text-nowrap col-1" style="font-size: 25px; border: none; margin-right: 10px;"><i style="cursor: pointer; margin: 0 auto;" class="fas fa-check text-success"></i></button>
+                                    <a href="/modify/{{todo.id}}" class="col-1"><i style="cursor: pointer; font-size: 25px;" class="fas fa-times text-danger"></i></a>
+                                </form>
+                                     
+                                {% endif %}
+                            </div>
+                            <div class="col-2" style="display: flex; justify-content: space-evenly;">
+                                {% if todo.complete == False %}
+                                    <a href="/delete/{{todo.id}}" style="font-size: 25px;"><i style="cursor: pointer;" class="fas text-danger fa-trash"></i></a>
+                                    <a href="/modify/{{todo.id}}" style="font-size: 25px;"><i style="cursor: pointer;" class="far fa-edit"></i></a>
+                                    <a href="/update/{{todo.id}}" style="font-size: 25px;"><i style="cursor: pointer;" class="fas fa-check-circle text-success"></i></a>
+                                {% else %}
+                                    <a href="/delete/{{todo.id}}" style="font-size: 25px;"><i style="cursor: pointer;" class="fas text-danger fa-trash"></i></a>
+                                    <a href="/modify/{{todo.id}}" style="font-size: 25px;"><i style="cursor: pointer;" class="far fa-edit"></i></a>
+                                    <a href="/update/{{todo.id}}" style="font-size: 25px;"><i style="cursor: pointer;" class="fas fa-redo-alt text-warning"></i></a>
+                                {% endif %}
+                                
+                            </div>
+                        
+                        </div>
+                        {% if todo.complete == False %}
+                            <small class="text-warning">Tarea pendiente...</small>
+                        {% else %}
+                            <small class="text-success">Tarea realizada</small>
+                        {% endif %}
+                        <small class="text-muted">Hasta {{todo.date}} a las {{todo.time}}</small>
+                    
+                    </div>
+                {% endfor %}
+                
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+    <!-- MDB -->
+    <script
+    type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.js"
+    ></script>
+    
+</body>
+</html>
